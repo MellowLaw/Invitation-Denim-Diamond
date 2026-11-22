@@ -5,9 +5,10 @@ import tailwindcss from '@tailwindcss/vite';
 function resolveSiteUrl(): string {
   const raw =
     process.env.VITE_SITE_URL ||
+    process.env.CF_PAGES_URL ||
     process.env.VERCEL_PROJECT_PRODUCTION_URL ||
     process.env.VERCEL_URL ||
-    'invitation-denim-diamond.vercel.app';
+    'invitation-denim-diamond.pages.dev';
   const trimmed = raw.trim().replace(/\/+$/, '');
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`;
 }
