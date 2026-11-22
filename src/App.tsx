@@ -11,14 +11,11 @@ import VenueSection from './components/VenueSection';
 import DressCodeSection from './components/DressCodeSection';
 import ProgramSection from './components/ProgramSection';
 import RsvpSection from './components/RsvpSection';
-import FloatingChrome from './components/FloatingChrome';
-import { reunionAudio } from './utils/audioEngine';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
   const [pocketOpen, setPocketOpen] = useState(false);
-  const [musicPlaying, setMusicPlaying] = useState(false);
   const [isMobile, setIsMobile] = useState(true);
   const lenisRef = useRef<Lenis | null>(null);
 
@@ -68,23 +65,8 @@ export default function App() {
     };
   }, [pocketOpen]);
 
-  useEffect(() => {
-    return () => {
-      reunionAudio.stop();
-    };
-  }, []);
-
-  const handleOpenPocket = async (withMusic: boolean) => {
+  const handleOpenPocket = () => {
     setPocketOpen(true);
-    if (withMusic) {
-      await reunionAudio.start();
-      setMusicPlaying(reunionAudio.isPlaying());
-    }
-  };
-
-  const handleToggleMusic = async () => {
-    const next = await reunionAudio.toggle();
-    setMusicPlaying(next);
   };
 
   return (
@@ -122,9 +104,6 @@ export default function App() {
           <ProgramSection active={pocketOpen} />
           <RsvpSection />
         </main>
-
-        {/* Persistent Floating Vinyl Music Toggle & Quick Attendance Link */}
-        {pocketOpen && <FloatingChrome playing={musicPlaying} onToggleMusic={handleToggleMusic} />}
       </div>
     </ClickSpark>
   );

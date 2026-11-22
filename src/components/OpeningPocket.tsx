@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import { Volume2 } from 'lucide-react';
 import ShinyText from './reactbits/ShinyText';
 import ChromeWord from './ChromeWord';
 import { EVENT_INFO } from '../data/reunionData';
 
 interface OpeningPocketProps {
-  onOpened: (withMusic: boolean) => void;
+  onOpened: () => void;
 }
 
 export default function OpeningPocket({ onOpened }: OpeningPocketProps) {
@@ -41,18 +40,18 @@ export default function OpeningPocket({ onOpened }: OpeningPocketProps) {
     return () => ctx.revert();
   }, []);
 
-  const handleOpen = (withMusic: boolean) => {
+  const handleOpen = () => {
     if (opening) return;
     setOpening(true);
 
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     if (reduced) {
-      onOpened(withMusic);
+      onOpened();
       return;
     }
 
     const tl = gsap.timeline({
-      onComplete: () => onOpened(withMusic),
+      onComplete: () => onOpened(),
     });
 
     tl.to(tlCornerRef.current, { x: -160, y: -160, opacity: 0, duration: 0.78, ease: 'power3.inOut' }, 0)
@@ -133,7 +132,7 @@ export default function OpeningPocket({ onOpened }: OpeningPocketProps) {
         {/* Borderless Tactile Chrome Star Trigger */}
         <button
           type="button"
-          onClick={() => handleOpen(false)}
+          onClick={handleOpen}
           className="pocket-center-item group mt-7 flex cursor-pointer flex-col items-center focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-[#9ec5ff]"
         >
           <img
@@ -144,15 +143,6 @@ export default function OpeningPocket({ onOpened }: OpeningPocketProps) {
           <span className="editorial-shadow mt-2 text-xs font-extrabold uppercase tracking-[0.32em] text-white transition group-hover:text-[#f4dfb7]">
             Tap to Enter
           </span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => handleOpen(true)}
-          className="pocket-center-item luminous-link mt-3 cursor-pointer text-xs font-semibold uppercase tracking-[0.2em]"
-        >
-          <Volume2 className="h-3.5 w-3.5" />
-          Or Enter with Music
         </button>
       </div>
     </div>
