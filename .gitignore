@@ -1,0 +1,22 @@
+# Dependencies & Build Outputs
+node_modules/
+dist/
+tsconfig.tsbuildinfo
+.vercel
+
+# Environment & OS files
+.env
+.env.*
+.DS_Store
+Thumbs.db
+*.log
+
+# Raw uncut source/reference files (runtime assets live in public/assets/)
+/assets/
+denim.jpg
+reference-2.jpg
+reference-3.jpg
+reference-4.jpg
+reference-5.jpg
+wave reference.png
+WEBSITE REFERENCE.png

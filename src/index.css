@@ -1,0 +1,239 @@
+@import "tailwindcss";
+
+:root {
+  --denim-abyss: #0c172b;
+  --denim-indigo: #16294b;
+  --denim-washed: #2b4a7a;
+  --denim-stitch: #d4b483;
+  --silver-chrome: #e5ecf7;
+  --font-serif: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-script: "Great Vibes", cursive;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
+
+html,
+body {
+  background-color: var(--denim-abyss);
+  color: var(--silver-chrome);
+  font-family: var(--font-sans);
+  overflow-x: clip;
+  scroll-behavior: auto;
+}
+
+.font-editorial {
+  font-family: var(--font-serif);
+}
+
+.font-script {
+  font-family: var(--font-script);
+}
+
+/* Woven diagonal indigo denim twill overlay */
+.denim-twill-overlay {
+  background-image:
+    repeating-linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.024) 0px,
+      rgba(255, 255, 255, 0.024) 2px,
+      rgba(6, 12, 26, 0.085) 2px,
+      rgba(6, 12, 26, 0.085) 5px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      rgba(158, 197, 255, 0.015) 0px,
+      rgba(158, 197, 255, 0.015) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+}
+
+/* Act 2: Warm textured cream paper with soft indigo watercolor edge washes */
+.bg-ivory-watercolor {
+  background-color: #f3f0e8;
+  background-image:
+    radial-gradient(ellipse 38% 65% at -4% 25%, rgba(28, 57, 108, 0.24), transparent 72%),
+    radial-gradient(ellipse 42% 72% at 105% 65%, rgba(22, 46, 92, 0.28), transparent 74%),
+    radial-gradient(rgba(16, 32, 59, 0.03) 1px, transparent 0);
+  background-size: 100% 100%, 100% 100%, 14px 14px;
+}
+
+/* Act 3: Calm midnight sapphire twilight for crisp Venue & Map readability */
+.bg-twilight-sapphire {
+  background-color: #091529;
+  background-image:
+    radial-gradient(circle at 50% 24%, rgba(45, 86, 152, 0.34), transparent 62%),
+    linear-gradient(180deg, #081326 0%, #102344 52%, #0b1830 100%);
+}
+
+/* Act 4: Vintage washed chambray denim */
+.bg-washed-chambray {
+  background-color: #203d6d;
+  background-image:
+    radial-gradient(circle at 30% 20%, rgba(122, 165, 232, 0.28), transparent 58%),
+    radial-gradient(circle at 75% 75%, rgba(14, 30, 58, 0.48), transparent 65%),
+    linear-gradient(180deg, #203d6d 0%, #2d518c 50%, #1b345e 100%);
+}
+
+/* Act 5: Airy ice-cloud paper with subtle blue watercolor edge mist */
+.bg-ice-cloud-paper {
+  background-color: #eef2f9;
+  background-image:
+    radial-gradient(ellipse 35% 55% at 0% 35%, rgba(54, 96, 165, 0.17), transparent 72%),
+    radial-gradient(ellipse 40% 60% at 100% 70%, rgba(30, 62, 118, 0.2), transparent 74%),
+    radial-gradient(rgba(16, 32, 59, 0.025) 1px, transparent 0);
+  background-size: 100% 100%, 100% 100%, 14px 14px;
+}
+
+/* Act 6: Deep sparkling midnight indigo */
+.bg-midnight-sparkle {
+  background-color: #091324;
+  background-image:
+    radial-gradient(circle at 50% 38%, rgba(42, 82, 148, 0.36), transparent 62%),
+    linear-gradient(180deg, #081122 0%, #12274b 60%, #091324 100%);
+}
+
+/* Crisp multi-layered text shadow for frameless floating dark-bg copy */
+.editorial-shadow {
+  text-shadow:
+    0 2px 26px rgba(4, 9, 22, 0.94),
+    0 1px 6px rgba(4, 9, 22, 0.98);
+}
+
+/* Subtle bright lift for crisp deep-navy text on paper backgrounds */
+.editorial-shadow-light {
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.72);
+}
+
+/* Invisible-edged soft radial scrim behind open-canvas center text */
+.soft-radial-scrim {
+  background: radial-gradient(
+    ellipse at center,
+    rgba(8, 16, 32, 0.64) 0%,
+    rgba(8, 16, 32, 0.32) 48%,
+    transparent 76%
+  );
+}
+
+/* Borderless luminous action link / underline CTA */
+.luminous-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 44px;
+  padding: 0.35rem 0.25rem;
+  color: #f4dfb7;
+  text-shadow: 0 0 18px rgba(212, 180, 131, 0.48), 0 2px 8px rgba(4, 9, 22, 0.95);
+  transition: color 220ms ease, transform 220ms ease, text-shadow 220ms ease;
+}
+
+.luminous-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(244, 223, 183, 0.85), transparent);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.luminous-link:hover {
+  color: #ffffff;
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.65), 0 2px 8px rgba(4, 9, 22, 0.95);
+}
+
+.luminous-link:hover::after {
+  transform: scaleX(1.06);
+}
+
+@keyframes vinylRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.vinyl-spin {
+  animation: vinylRotate 10s linear infinite;
+}
+
+.vinyl-spin-paused {
+  animation-play-state: paused;
+}
+
+@keyframes slowOrbitSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.disco-slow-spin {
+  animation: slowOrbitSpin 32s linear infinite;
+}
+
+@keyframes gentleFloat {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-7px) scale(1.03);
+  }
+}
+
+.float-star {
+  animation: gentleFloat 3.4s ease-in-out infinite;
+}
+
+@keyframes venuePinPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(2.3);
+    opacity: 0;
+  }
+}
+
+.venue-pin-pulse {
+  animation: venuePinPulse 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.leaflet-container,
+.leaflet-container *,
+.venue-leaflet-popup,
+.venue-leaflet-popup * {
+  text-shadow: none !important;
+}
+
+.leaflet-container {
+  font-family: var(--font-sans);
+}
+
+.venue-leaflet-popup .leaflet-popup-content-wrapper {
+  border-radius: 0.75rem;
+  background: rgba(255, 255, 255, 0.96);
+  color: #0e1f3d;
+  box-shadow: 0 14px 32px rgba(4, 10, 24, 0.36);
+}
+
+.venue-leaflet-popup .leaflet-popup-tip {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vinyl-spin,
+  .disco-slow-spin,
+  .float-star,
+  .venue-pin-pulse {
+    animation: none !important;
+  }
+}
