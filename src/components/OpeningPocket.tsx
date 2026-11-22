@@ -127,7 +127,7 @@ export default function OpeningPocket({ onOpened }: OpeningPocketProps) {
           <ShinyText text="12 Years Later" color="#dce7f8" shineColor="#ffffff" speed={2.2} />
         </p>
         <p className="pocket-center-item font-editorial editorial-shadow mt-1.5 text-base italic tracking-wide text-[#f5d79b] sm:text-lg">
-          {EVENT_INFO.schoolShort} — Section Diamond
+          {EVENT_INFO.schoolShort} Section Diamond
         </p>
 
         {/* Borderless Tactile Chrome Star Trigger */}

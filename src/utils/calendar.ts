@@ -3,7 +3,7 @@ import { EVENT_INFO } from '../data/reunionData';
 export function getReunionGoogleCalendarUrl(): string {
   const params = new URLSearchParams({
     action: 'TEMPLATE',
-    text: `${EVENT_INFO.title} — PINHS Section Diamond Reunion`,
+    text: `${EVENT_INFO.title} | PINHS Section Diamond Reunion`,
     dates: '20270123T090000Z/20270123T213000Z',
     details: [
       `${EVENT_INFO.subtitle}`,
@@ -40,7 +40,7 @@ export function downloadReunionIcs(): void {
     'DTSTAMP:20261122T080000Z',
     'DTSTART:20270123T090000Z',
     'DTEND:20270123T213000Z',
-    `SUMMARY:${EVENT_INFO.title} — PINHS Section Diamond`,
+    `SUMMARY:${EVENT_INFO.title} | PINHS Section Diamond`,
     `LOCATION:${EVENT_INFO.venueName}\\, ${EVENT_INFO.venueLandmark}`,
     `DESCRIPTION:4th Year High School Reunion of Section Diamond (${EVENT_INFO.schoolFull}). Adviser: ${EVENT_INFO.adviser}. Theme: ${EVENT_INFO.theme}. Attendance Form due Dec 4\\, 2026: ${EVENT_INFO.rsvpUrl}`,
     'END:VEVENT',

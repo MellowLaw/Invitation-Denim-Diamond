@@ -155,7 +155,7 @@ export default function RsvpSection() {
           {EVENT_INFO.title}
         </p>
         <p className="mt-0.5">
-          {EVENT_INFO.schoolFull} — Section Diamond — {EVENT_INFO.adviser}
+          {EVENT_INFO.schoolFull}, Section Diamond ({EVENT_INFO.adviser})
         </p>
         <p className="mt-0.5 text-[11px] text-[#96b2dd]">
           {EVENT_INFO.venueName}, {EVENT_INFO.venueLandmark}

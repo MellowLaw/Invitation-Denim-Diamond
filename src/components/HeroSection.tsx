@@ -228,7 +228,7 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
 
         <div className="hero-stagger editorial-shadow mt-4 space-y-1">
           <p className="font-editorial text-lg italic text-[#f5d79b] sm:text-xl">
-            Section Diamond — 4th Year High School Reunion
+            4th Year High School Reunion, Section Diamond
           </p>
           <p className="font-editorial text-xl font-bold tracking-wide text-white sm:text-2xl">
             {EVENT_INFO.schoolFull}

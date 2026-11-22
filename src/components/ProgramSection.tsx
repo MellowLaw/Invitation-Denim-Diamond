@@ -495,7 +495,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                         {item.title}
                         {item.host ? (
                           <span className="ml-2 font-sans text-sm font-bold tracking-wide text-[#9a6412] sm:text-base">
-                            — {item.host}
+                            by {item.host}
                           </span>
                         ) : null}
                       </h3>
@@ -517,7 +517,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                             >
                               <span className="font-medium text-[#162b4f]">{sub.label}</span>
                               {sub.host && (
-                                <span className="font-bold text-[#8c6326]">— {sub.host}</span>
+                                <span className="font-bold text-[#8c6326]">({sub.host})</span>
                               )}
                             </li>
                           ))}

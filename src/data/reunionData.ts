@@ -28,7 +28,7 @@ export interface DressSwatch {
 
 export const EVENT_INFO = {
   title: 'The Last Diamond: 12 Years Later',
-  subtitle: '4th Year High School Reunion — Section Diamond',
+  subtitle: '4th Year High School Reunion, Section Diamond',
   schoolFull: 'Plaridel Integrated National High School (PINHS)',
   schoolShort: 'PINHS',
   adviser: "Ma'am Teresa Suazo",
@@ -187,7 +187,7 @@ export const PROGRAM_FLOW: ProgramItem[] = [
     time: '7:00 PM – 7:30 PM',
     title: 'Game 3 (Team)',
     host: 'Wiljohn',
-    note: 'To follow — get your team ready!',
+    note: 'To follow. Get your team ready!',
     sticker: '/assets/stickers/denim-smiley-patch.png',
     stickerAlt: 'Denim smiley patch',
   },

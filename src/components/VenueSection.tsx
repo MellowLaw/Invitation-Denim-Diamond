@@ -131,7 +131,7 @@ export default function VenueSection() {
         <div className="venue-map-reveal mx-auto mt-8 max-w-2xl">
           <VenueMap />
           <p className="mt-2.5 text-[11px] tracking-wide text-[#adc6eb]">
-            249 Nagcarlan–Rizal Rd, Brgy. West, Rizal, Laguna 4003 — right in front of Rizal Elementary School. Tap Satellite or drag to explore.
+            249 Nagcarlan-Rizal Rd, Brgy. West, Rizal, Laguna 4003 (right in front of Rizal Elementary School). Tap Satellite or drag to explore.
           </p>
         </div>
 
