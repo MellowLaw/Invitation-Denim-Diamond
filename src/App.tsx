@@ -28,6 +28,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    const isFinePointer = window.matchMedia?.('(pointer: fine)').matches ?? false;
+    if (!isFinePointer) return;
+
     const lenis = new Lenis({
       smoothWheel: true,
       lerp: 0.09,
@@ -75,7 +78,10 @@ export default function App() {
         {/* Ambient Sparkle Dust Floating Gently Over All Sections */}
         <div className="pointer-events-none fixed inset-0 z-30">
           <Particles
-            particleCount={isMobile ? 28 : 54}
+            particleCount={isMobile ? 14 : 48}
+            pixelRatio={isMobile ? 1 : undefined}
+            moveParticlesOnHover={!isMobile}
+            clickBurst={!isMobile}
             shape="sparkle"
             particleColors={['#ffffff', '#d7e6ff', '#9ec5ff', '#f3d69c']}
             particleBaseSize={isMobile ? 42 : 48}
@@ -88,21 +94,25 @@ export default function App() {
         {/* Act 0: Borderless Living Collage Opening Curtain */}
         {!pocketOpen && <OpeningPocket onOpened={handleOpenPocket} />}
 
-        {/* Main Flowing Invitation Content (Each Section Has Its Own Distinct Seamless Background) */}
+        {/* Main Flowing Invitation Content (Below-the-fold sections mount after unlock) */}
         <main
           aria-hidden={!pocketOpen}
           className={
             pocketOpen
-              ? 'relative z-10 overflow-x-clip opacity-100 transition-opacity duration-500'
+              ? 'relative z-10 overflow-x-clip opacity-100 transition-opacity duration-300'
               : 'pointer-events-none fixed inset-0 z-10 overflow-hidden opacity-0'
           }
         >
           <HeroSection isMobile={isMobile} active={pocketOpen} />
-          <StorySection />
-          <VenueSection />
-          <DressCodeSection />
-          <ProgramSection active={pocketOpen} />
-          <RsvpSection />
+          {pocketOpen && (
+            <>
+              <StorySection />
+              <VenueSection />
+              <DressCodeSection />
+              <ProgramSection active={pocketOpen} />
+              <RsvpSection />
+            </>
+          )}
         </main>
       </div>
     </ClickSpark>

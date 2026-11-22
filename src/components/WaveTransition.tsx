@@ -2,7 +2,6 @@ interface WaveTransitionProps {
   toColor: string;
   edge?: 'bottom' | 'top';
   heightClass?: string;
-  blur?: boolean;
   className?: string;
 }
 
@@ -31,7 +30,6 @@ export default function WaveTransition({
   toColor,
   edge = 'bottom',
   heightClass = 'h-32 sm:h-44',
-  blur = true,
   className = '',
 }: WaveTransitionProps) {
   const [r, g, b] = hexToRgb(toColor);
@@ -46,32 +44,15 @@ export default function WaveTransition({
     `rgba(${r}, ${g}, ${b}, 1) 100%`,
   ].join(', ');
 
-  const blurMask = `linear-gradient(${direction}, transparent 0%, rgba(0, 0, 0, 0.45) 55%, black 100%)`;
-
   return (
     <div
       className={`pointer-events-none absolute inset-x-0 ${
         edge === 'top' ? 'top-0' : 'bottom-0'
       } select-none ${heightClass} ${className}`.trim()}
       aria-hidden="true"
-    >
-      {blur && (
-        <div
-          className="absolute inset-0"
-          style={{
-            backdropFilter: 'blur(10px)',
-            WebkitBackdropFilter: 'blur(10px)',
-            maskImage: blurMask,
-            WebkitMaskImage: blurMask,
-          }}
-        />
-      )}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: `linear-gradient(${direction}, ${gradientStops})`,
-        }}
-      />
-    </div>
+      style={{
+        background: `linear-gradient(${direction}, ${gradientStops})`,
+      }}
+    />
   );
 }

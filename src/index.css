@@ -174,8 +174,10 @@ body {
   }
 }
 
-.disco-slow-spin {
-  animation: slowOrbitSpin 32s linear infinite;
+@media (min-width: 768px) {
+  .disco-slow-spin {
+    animation: slowOrbitSpin 32s linear infinite;
+  }
 }
 
 @keyframes gentleFloat {
@@ -229,7 +231,43 @@ body {
   background: rgba(255, 255, 255, 0.96);
 }
 
+.reveal-item {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 460ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-item.reveal-left {
+  transform: translate3d(-18px, 12px, 0);
+}
+
+.reveal-item.reveal-right {
+  transform: translate3d(18px, 12px, 0);
+}
+
+.reveal-item.reveal-scale {
+  transform: translate3d(0, 14px, 0) scale(0.95);
+}
+
+.reveal-item.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  will-change: auto;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .reveal-item,
+  .reveal-item.reveal-left,
+  .reveal-item.reveal-right,
+  .reveal-item.reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
   .vinyl-spin,
   .disco-slow-spin,
   .float-star,

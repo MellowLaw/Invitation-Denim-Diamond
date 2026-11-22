@@ -22,8 +22,10 @@ export default function ChromeWord({
       {letters.map((ch, idx) => (
         <img
           key={`${ch}-${idx}`}
-          src={`/assets/letters/letter-${ch}.png`}
+          src={`/assets/letters/letter-${ch}.webp`}
           alt={ch}
+          decoding="async"
+          fetchPriority="high"
           draggable={false}
           className={`${letterClassName} w-auto select-none object-contain drop-shadow-[0_6px_14px_rgba(12,23,43,0.45)] transition-transform duration-300 hover:scale-110`.trim()}
           style={{

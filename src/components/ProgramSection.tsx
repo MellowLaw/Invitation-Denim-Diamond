@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import WaveTransition from './WaveTransition';
 import { EVENT_INFO, PROGRAM_FLOW } from '../data/reunionData';
+import { useScrollReveal } from '../utils/useScrollReveal';
 
 interface ProgramSectionProps {
   active?: boolean;
@@ -60,6 +61,8 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
     spineD: '',
     branches: [],
   });
+
+  useScrollReveal(sectionRef);
 
   const measureCurves = useCallback(() => {
     const wrap = wrapRef.current;
@@ -170,7 +173,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
     };
   }, [measureCurves, active]);
 
-  // Animate the curved dashed S-curve progress mask on scroll
+  // Animate curved dashed S-curve progress mask on scroll
   useEffect(() => {
     const pathEl = maskPathRef.current;
     const wrapEl = wrapRef.current;
@@ -192,7 +195,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
           trigger: wrapEl,
           start: 'top 76%',
           end: 'bottom 80%',
-          scrub: 0.75,
+          scrub: 0.35,
         },
       });
     }, wrapRef);
@@ -200,82 +203,13 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
     return () => ctx.revert();
   }, [svgGeo.spineD]);
 
-  // Entrance animations for header, connected timeline entries, dots, stickers, and corner parallax
+  // Desktop-only corner sticker parallax
   useEffect(() => {
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     if (reduced || !sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
-      gsap.from('.program-header-reveal', {
-        y: 28,
-        opacity: 0,
-        filter: 'blur(6px)',
-        duration: 0.85,
-        stagger: 0.1,
-        ease: 'power3.out',
-        clearProps: 'transform,filter',
-        scrollTrigger: {
-          trigger: '.program-header',
-          start: 'top 80%',
-          once: true,
-        },
-      });
-
-      gsap.utils.toArray<HTMLElement>('.program-row').forEach((row, idx) => {
-        const isLeft = idx % 2 === 0;
-        const entries = row.querySelectorAll('.program-entry');
-        const dots = row.querySelectorAll('.program-dot-visual');
-        const sticker = row.querySelector('.program-sticker-desktop');
-
-        if (dots.length > 0) {
-          gsap.from(dots, {
-            scale: 0.25,
-            opacity: 0,
-            duration: 0.55,
-            ease: 'back.out(2)',
-            clearProps: 'transform',
-            scrollTrigger: {
-              trigger: row,
-              start: 'top 86%',
-              once: true,
-            },
-          });
-        }
-
-        if (entries.length > 0) {
-          gsap.from(entries, {
-            x: isLeft ? -26 : 26,
-            y: 18,
-            opacity: 0,
-            filter: 'blur(5px)',
-            duration: 0.8,
-            stagger: 0.08,
-            ease: 'power3.out',
-            clearProps: 'transform,filter',
-            scrollTrigger: {
-              trigger: row,
-              start: 'top 86%',
-              once: true,
-            },
-          });
-        }
-
-        if (sticker) {
-          gsap.from(sticker, {
-            scale: 0.85,
-            opacity: 0,
-            duration: 0.78,
-            ease: 'power3.out',
-            clearProps: 'transform',
-            scrollTrigger: {
-              trigger: row,
-              start: 'top 86%',
-              once: true,
-            },
-          });
-        }
-      });
-
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 768px)', () => {
       gsap.utils.toArray<HTMLElement>('.program-parallax').forEach((el, idx) => {
         gsap.to(el, {
           y: idx % 2 === 0 ? -36 : 36,
@@ -288,54 +222,57 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
           },
         });
       });
-    }, sectionRef);
+    });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
     <section ref={sectionRef} id="program" className="bg-ice-cloud-paper relative overflow-x-clip pt-32 text-[#0e1f3d] sm:pt-32">
       {/* Subtle Top Feather matching DressCode bottom blend */}
-      <WaveTransition edge="top" toColor="#eef2f9" blur={false} heightClass="h-16 sm:h-24" className="z-[5]" />
+      <WaveTransition edge="top" toColor="#eef2f9" heightClass="h-16 sm:h-24" className="z-[5]" />
 
       {/* TOP-LEFT OVERLOADED COLLAGE */}
       <div className="program-parallax pointer-events-none absolute -left-14 top-4 z-10 h-52 w-56 select-none sm:-left-10 sm:top-6 sm:h-80 sm:w-80">
-        <img src="/assets/stickers/disco-ball-checkered.png" alt="" className="absolute left-0 top-0 h-28 w-28 opacity-95 drop-shadow-2xl sm:h-52 sm:w-52" />
-        <img src="/assets/stickers/bow-chrome.png" alt="" className="absolute left-14 top-14 h-12 w-auto -rotate-12 drop-shadow-xl sm:left-32 sm:top-32 sm:h-24" />
-        <img src="/assets/stickers/star-denim-studded.png" alt="" className="absolute left-4 top-28 h-12 w-12 rotate-12 drop-shadow-xl sm:left-8 sm:top-48 sm:h-20 sm:w-20" />
-        <img src="/assets/stickers/sparkle-chrome-left.png" alt="" className="hidden sm:block sm:absolute sm:left-40 sm:top-10 sm:h-20 sm:w-auto sm:opacity-90" />
+        <img src="/assets/stickers/disco-ball-checkered.webp" alt="" loading="lazy" decoding="async" className="absolute left-0 top-0 h-28 w-28 opacity-95 md:drop-shadow-2xl sm:h-52 sm:w-52" />
+        <img src="/assets/stickers/bow-chrome.webp" alt="" loading="lazy" decoding="async" className="absolute left-14 top-14 h-12 w-auto -rotate-12 md:drop-shadow-xl sm:left-32 sm:top-32 sm:h-24" />
+        <img src="/assets/stickers/star-denim-studded.webp" alt="" loading="lazy" decoding="async" className="absolute left-4 top-28 h-12 w-12 rotate-12 md:drop-shadow-xl sm:left-8 sm:top-48 sm:h-20 sm:w-20" />
+        <img src="/assets/stickers/sparkle-chrome-left.webp" alt="" loading="lazy" decoding="async" className="hidden sm:block sm:absolute sm:left-40 sm:top-10 sm:h-20 sm:w-auto sm:opacity-90" />
       </div>
 
       {/* TOP-RIGHT OVERLOADED COLLAGE */}
       <div className="program-parallax pointer-events-none absolute -right-14 top-4 z-10 h-52 w-56 select-none sm:-right-8 sm:top-6 sm:h-80 sm:w-80">
-        <img src="/assets/stickers/vinyl-disc-blue.png" alt="" className="disco-slow-spin absolute right-0 top-0 h-28 w-28 opacity-95 drop-shadow-2xl sm:h-48 sm:w-48" />
-        <img src="/assets/stickers/star-glitter-silver.png" alt="" className="absolute right-14 top-12 h-12 w-12 rotate-12 sm:right-32 sm:top-28 sm:h-22 sm:w-22" />
-        <img src="/assets/stickers/butterfly-blue.png" alt="" className="hidden sm:block sm:absolute sm:right-36 sm:top-4 sm:h-20 sm:w-auto sm:-rotate-12" />
-        <img src="/assets/stickers/flower-blue.png" alt="" className="hidden sm:block sm:absolute sm:right-6 sm:top-40 sm:h-20 sm:w-auto sm:rotate-12" />
+        <img src="/assets/stickers/vinyl-disc-blue.webp" alt="" loading="lazy" decoding="async" className="disco-slow-spin absolute right-0 top-0 h-28 w-28 opacity-95 md:drop-shadow-2xl sm:h-48 sm:w-48" />
+        <img src="/assets/stickers/star-glitter-silver.webp" alt="" loading="lazy" decoding="async" className="absolute right-14 top-12 h-12 w-12 rotate-12 sm:right-32 sm:top-28 sm:h-22 sm:w-22" />
+        <img src="/assets/stickers/butterfly-blue.webp" alt="" loading="lazy" decoding="async" className="hidden sm:block sm:absolute sm:right-36 sm:top-4 sm:h-20 sm:w-auto sm:-rotate-12" />
+        <img src="/assets/stickers/flower-blue.webp" alt="" loading="lazy" decoding="async" className="hidden sm:block sm:absolute sm:right-6 sm:top-40 sm:h-20 sm:w-auto sm:rotate-12" />
       </div>
 
-      {/* BOTTOM-LEFT OVERLOADED COLLAGE (left-anchored cowboy hat) */}
+      {/* BOTTOM-LEFT OVERLOADED COLLAGE */}
       <div className="program-parallax pointer-events-none absolute bottom-10 -left-14 z-10 h-48 w-52 select-none sm:bottom-14 sm:-left-10 sm:h-72 sm:w-76">
-        <img src="/assets/stickers/cowboy-hat-silver.png" alt="" className="absolute bottom-6 left-0 h-22 w-auto -rotate-12 drop-shadow-2xl sm:bottom-10 sm:h-36" />
-        <img src="/assets/stickers/lips-blue-glossy.png" alt="" className="absolute bottom-2 left-16 h-12 w-auto rotate-6 drop-shadow-xl sm:bottom-4 sm:left-28 sm:h-20" />
-        <img src="/assets/stickers/star-glitter-blue.png" alt="" className="absolute bottom-24 left-12 h-12 w-12 rotate-12 sm:bottom-36 sm:left-24 sm:h-16 sm:w-16" />
-        <img src="/assets/stickers/heart-chrome-small.png" alt="" className="hidden sm:block sm:absolute sm:bottom-20 sm:left-40 sm:h-14 sm:w-auto sm:-rotate-12" />
+        <img src="/assets/stickers/cowboy-hat-silver.webp" alt="" loading="lazy" decoding="async" className="absolute bottom-6 left-0 h-22 w-auto -rotate-12 md:drop-shadow-2xl sm:bottom-10 sm:h-36" />
+        <img src="/assets/stickers/lips-blue-glossy.webp" alt="" loading="lazy" decoding="async" className="absolute bottom-2 left-16 h-12 w-auto rotate-6 md:drop-shadow-xl sm:bottom-4 sm:left-28 sm:h-20" />
+        <img src="/assets/stickers/star-glitter-blue.webp" alt="" loading="lazy" decoding="async" className="absolute bottom-24 left-12 h-12 w-12 rotate-12 sm:bottom-36 sm:left-24 sm:h-16 sm:w-16" />
+        <img src="/assets/stickers/heart-chrome-small.webp" alt="" loading="lazy" decoding="async" className="hidden sm:block sm:absolute sm:bottom-20 sm:left-40 sm:h-14 sm:w-auto sm:-rotate-12" />
       </div>
 
       {/* BOTTOM-RIGHT OVERLOADED COLLAGE */}
       <div className="program-parallax pointer-events-none absolute bottom-10 -right-14 z-10 h-48 w-52 select-none sm:bottom-14 sm:-right-8 sm:h-72 sm:w-76">
-        <img src="/assets/stickers/disco-ball-stars.png" alt="" className="absolute bottom-0 right-0 h-28 w-auto drop-shadow-2xl sm:h-48" />
-        <img src="/assets/stickers/bow-navy-satin.png" alt="" className="hidden sm:block sm:absolute sm:bottom-28 sm:right-6 sm:h-24 sm:w-auto sm:rotate-12" />
-        <img src="/assets/stickers/martini-glass.png" alt="" className="hidden sm:block sm:absolute sm:bottom-10 sm:right-36 sm:h-24 sm:w-auto sm:-rotate-12 sm:drop-shadow-xl" />
-        <img src="/assets/stickers/lips-silver-1.png" alt="" className="absolute bottom-2 right-20 h-10 w-auto -rotate-12 opacity-90 sm:bottom-4 sm:right-40 sm:h-14" />
+        <img src="/assets/stickers/disco-ball-stars.webp" alt="" loading="lazy" decoding="async" className="absolute bottom-0 right-0 h-28 w-auto md:drop-shadow-2xl sm:h-48" />
+        <img src="/assets/stickers/bow-navy-satin.webp" alt="" loading="lazy" decoding="async" className="hidden sm:block sm:absolute sm:bottom-28 sm:right-6 sm:h-24 sm:w-auto sm:rotate-12" />
+        <img src="/assets/stickers/martini-glass.webp" alt="" loading="lazy" decoding="async" className="hidden sm:block sm:absolute sm:bottom-10 sm:right-36 sm:h-24 sm:w-auto sm:-rotate-12 md:drop-shadow-xl" />
+        <img src="/assets/stickers/lips-silver-1.webp" alt="" loading="lazy" decoding="async" className="absolute bottom-2 right-20 h-10 w-auto -rotate-12 opacity-90 sm:bottom-4 sm:right-40 sm:h-14" />
       </div>
 
       <div className="px-4 pb-36 sm:px-8 sm:pb-44">
         <div className="program-header editorial-shadow-light relative z-20 mb-14 pt-2 text-center">
-          <h2 className="program-header-reveal font-editorial text-4xl font-bold text-[#0e1f3d] sm:text-6xl">
+          <h2 className="reveal-item font-editorial text-4xl font-bold text-[#0e1f3d] sm:text-6xl">
             Program Timeline
           </h2>
-          <p className="program-header-reveal font-script mt-1 text-3xl text-[#264b8a] sm:text-4xl">
+          <p
+            style={{ transitionDelay: '70ms' }}
+            className="reveal-item font-script mt-1 text-3xl text-[#264b8a] sm:text-4xl"
+          >
             From Sunset to Sunrise
           </p>
         </div>
@@ -426,7 +363,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                   key={item.id}
                   className="program-row relative grid grid-cols-1 md:grid-cols-[1fr_132px_1fr] md:items-start"
                 >
-                  {/* Mobile Colored Diamond Dot (swayed left/right on rail; outer box un-transformed for SVG measurement) */}
+                  {/* Mobile Colored Diamond Dot */}
                   <span
                     data-timeline-dot={idx}
                     aria-hidden="true"
@@ -435,7 +372,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                     }`}
                   >
                     <span
-                      className="program-dot-visual block h-full w-full rotate-45 ring-2 ring-[#eef2f9]"
+                      className="reveal-item reveal-scale block h-full w-full rotate-45 ring-2 ring-[#eef2f9]"
                       style={{
                         backgroundColor: accent.dotBg,
                         boxShadow: `0 0 12px ${accent.dotGlow}`,
@@ -443,7 +380,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                     />
                   </span>
 
-                  {/* Desktop Center Colored Diamond Marker (alternating ±28px S-wave placement) */}
+                  {/* Desktop Center Colored Diamond Marker */}
                   <div
                     aria-hidden="true"
                     className="hidden md:relative md:col-start-2 md:row-start-1 md:flex md:justify-center"
@@ -455,7 +392,7 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                       }`}
                     >
                       <span
-                        className="program-dot-visual block h-full w-full rotate-45 ring-[3px] ring-[#eef2f9]"
+                        className="reveal-item reveal-scale block h-full w-full rotate-45 ring-[3px] ring-[#eef2f9]"
                         style={{
                           backgroundColor: accent.dotBg,
                           boxShadow: `0 0 14px ${accent.dotGlow}`,
@@ -477,7 +414,8 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                       src={item.sticker}
                       alt=""
                       loading="lazy"
-                      className="pointer-events-none absolute -right-1 top-0 h-12 w-auto select-none opacity-95 drop-shadow-[0_10px_18px_rgba(14,31,61,0.32)] md:hidden"
+                      decoding="async"
+                      className="pointer-events-none absolute -right-1 top-0 h-12 w-auto select-none opacity-95 md:hidden"
                     />
 
                     {/* Prominent BIG Time Text wrapped around fixed layout anchor */}
@@ -486,11 +424,20 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                       style={{ color: accent.time }}
                     >
                       <span data-timeline-anchor={idx} className="inline-block">
-                        <span className="program-entry inline-block">{item.time}</span>
+                        <span
+                          className={`reveal-item inline-block ${
+                            isLeft ? 'reveal-left' : 'reveal-right'
+                          }`}
+                        >
+                          {item.time}
+                        </span>
                       </span>
                     </p>
 
-                    <div className="program-entry">
+                    <div
+                      style={{ transitionDelay: '55ms' }}
+                      className={`reveal-item ${isLeft ? 'reveal-left' : 'reveal-right'}`}
+                    >
                       <h3 className="font-editorial mt-1 text-xl font-bold leading-snug text-[#0e1f3d] sm:text-2xl">
                         {item.title}
                         {item.host ? (
@@ -539,7 +486,8 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
                       src={item.sticker}
                       alt={item.stickerAlt}
                       loading="lazy"
-                      className={`program-sticker-desktop h-24 w-auto object-contain opacity-95 drop-shadow-[0_14px_24px_rgba(14,31,61,0.32)] ${
+                      decoding="async"
+                      className={`reveal-item reveal-scale h-24 w-auto object-contain opacity-95 md:drop-shadow-[0_14px_24px_rgba(14,31,61,0.32)] ${
                         isLeft ? 'rotate-6' : '-rotate-6'
                       }`}
                     />
@@ -550,12 +498,12 @@ export default function ProgramSection({ active = true }: ProgramSectionProps) {
           </div>
         </div>
 
-        <p className="editorial-shadow-light relative z-20 mx-auto mt-10 max-w-md text-center text-xs italic tracking-wide text-[#2b446c] sm:text-sm">
+        <p className="reveal-item editorial-shadow-light relative z-20 mx-auto mt-10 max-w-md text-center text-xs italic tracking-wide text-[#2b446c] sm:text-sm">
           {EVENT_INFO.programFootnote}
         </p>
       </div>
 
-      {/* Gradient Blur Blend into Midnight Attendance Form Finale */}
+      {/* Gradient Blend into Midnight Attendance Form Finale */}
       <WaveTransition toColor="#081122" heightClass="h-32 sm:h-44" className="z-[15]" />
     </section>
   );

@@ -49,7 +49,7 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
     return () => window.clearInterval(timer);
   }, []);
 
-  // Entrance timeline gated on pocket gate unlock (active === true)
+  // Pure GPU entrance timeline gated on pocket gate unlock
   useEffect(() => {
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     if (!sectionRef.current) return;
@@ -61,35 +61,36 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
       }
 
       if (!active) {
-        gsap.set('.hero-corner', { opacity: 0, scale: 0.88 });
-        gsap.set('.hero-stagger', { opacity: 0, y: 28, filter: 'blur(7px)' });
+        gsap.set('.hero-corner', { opacity: 0, scale: 0.94 });
+        gsap.set('.hero-stagger', { opacity: 0, y: 18 });
         return;
       }
 
       gsap.fromTo(
         '.hero-corner',
-        { opacity: 0, scale: 0.88 },
+        { opacity: 0, scale: 0.94 },
         {
           opacity: 1,
           scale: 1,
-          duration: 0.9,
-          stagger: 0.07,
+          duration: 0.65,
+          stagger: 0.05,
           ease: 'power3.out',
+          force3D: true,
           clearProps: 'transform',
         }
       );
 
       gsap.fromTo(
         '.hero-stagger',
-        { y: 28, opacity: 0, filter: 'blur(7px)' },
+        { y: 18, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          filter: 'blur(0px)',
-          duration: 0.9,
-          stagger: 0.09,
+          duration: 0.55,
+          stagger: 0.055,
           ease: 'power3.out',
-          clearProps: 'transform,filter',
+          force3D: true,
+          clearProps: 'transform',
         }
       );
     }, sectionRef);
@@ -97,12 +98,13 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
     return () => ctx.revert();
   }, [active]);
 
-  // Continuous scroll-linked parallax for corner stickers & center typography float
+  // Desktop-only scroll parallax so touch scrolling on mobile stays 60fps
   useEffect(() => {
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
     if (reduced || !sectionRef.current) return;
 
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 768px)', () => {
       gsap.utils.toArray<HTMLElement>('.hero-parallax').forEach((el, idx) => {
         const speed = Number(el.dataset.speed || 35);
         gsap.to(el, {
@@ -128,9 +130,9 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
           scrub: 1.1,
         },
       });
-    }, sectionRef);
+    });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   return (
@@ -139,7 +141,7 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
       id="hero"
       className="relative flex min-h-[100svh] flex-col items-center justify-center overflow-x-clip bg-[#0c172b] px-6 pb-36 pt-32 sm:px-16 sm:pb-44 sm:pt-36"
     >
-      {/* Exclusive Living Indigo Denim Silk Shader for Hero */}
+      {/* Exclusive Living Indigo Denim Silk Shader for Hero (paused while curtain covers it) */}
       <div className="pointer-events-none absolute inset-0 z-0">
         <Silk
           color="#142748"
@@ -149,7 +151,10 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
           sheen={0.55}
           depth={0.72}
           glow={0.22}
-          dpr={isMobile ? 1.2 : undefined}
+          dpr={isMobile ? 0.75 : 1.25}
+          mouseInteraction={!isMobile}
+          clickRipple={!isMobile}
+          paused={!active}
         />
         <div className="denim-twill-overlay absolute inset-0" aria-hidden="true" />
       </div>
@@ -159,13 +164,13 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
         data-speed="38"
         className="hero-corner hero-parallax pointer-events-none absolute -left-16 -top-14 z-10 h-52 w-52 select-none sm:-left-12 sm:-top-12 sm:h-72 sm:w-72 lg:h-80 lg:w-80"
       >
-        <img src="/assets/stickers/vinyl-disc-blue.png" alt="" className="absolute left-12 top-0 h-24 w-24 opacity-90 sm:left-24 sm:h-36 sm:w-36" />
-        <img src="/assets/stickers/disco-ball-checkered.png" alt="" className="disco-slow-spin absolute left-0 top-0 h-32 w-32 drop-shadow-[0_18px_30px_rgba(4,8,18,0.8)] sm:h-52 sm:w-52" />
-        <img src="/assets/stickers/star-denim-studded.png" alt="" className="absolute left-16 top-16 h-16 w-16 -rotate-12 drop-shadow-xl sm:left-28 sm:top-28 sm:h-24 sm:w-24" />
-        <img src="/assets/stickers/bow-chrome-small.png" alt="" className="absolute left-6 top-6 h-14 w-auto rotate-12 drop-shadow-xl sm:left-10 sm:top-8 sm:h-20" />
-        <img src="/assets/stickers/star-glitter-silver.png" alt="" className="absolute left-4 top-28 h-12 w-12 rotate-12 opacity-90 sm:top-44 sm:h-18 sm:w-18" />
-        <img src="/assets/stickers/flower-blue.png" alt="" className="hidden sm:block sm:absolute sm:left-32 sm:top-44 sm:h-20 sm:w-auto sm:-rotate-12 sm:drop-shadow-xl" />
-        <img src="/assets/stickers/sparkle-chrome-left.png" alt="" className="hidden lg:block lg:absolute lg:left-44 lg:top-8 lg:h-24 lg:w-auto" />
+        <img src="/assets/stickers/vinyl-disc-blue.webp" alt="" decoding="async" className="absolute left-12 top-0 h-24 w-24 opacity-90 sm:left-24 sm:h-36 sm:w-36" />
+        <img src="/assets/stickers/disco-ball-checkered.webp" alt="" decoding="async" className="disco-slow-spin absolute left-0 top-0 h-32 w-32 md:drop-shadow-[0_18px_30px_rgba(4,8,18,0.8)] sm:h-52 sm:w-52" />
+        <img src="/assets/stickers/star-denim-studded.webp" alt="" decoding="async" className="absolute left-16 top-16 h-16 w-16 -rotate-12 md:drop-shadow-xl sm:left-28 sm:top-28 sm:h-24 sm:w-24" />
+        <img src="/assets/stickers/bow-chrome-small.webp" alt="" decoding="async" className="absolute left-6 top-6 h-14 w-auto rotate-12 md:drop-shadow-xl sm:left-10 sm:top-8 sm:h-20" />
+        <img src="/assets/stickers/star-glitter-silver.webp" alt="" decoding="async" className="absolute left-4 top-28 h-12 w-12 rotate-12 opacity-90 sm:top-44 sm:h-18 sm:w-18" />
+        <img src="/assets/stickers/flower-blue.webp" alt="" decoding="async" className="hidden sm:block sm:absolute sm:left-32 sm:top-44 sm:h-20 sm:w-auto sm:-rotate-12 md:drop-shadow-xl" />
+        <img src="/assets/stickers/sparkle-chrome-left.webp" alt="" decoding="async" className="hidden lg:block lg:absolute lg:left-44 lg:top-8 lg:h-24 lg:w-auto" />
       </div>
 
       {/* TOP-RIGHT OVERLOADED COLLAGE */}
@@ -173,40 +178,40 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
         data-speed="44"
         className="hero-corner hero-parallax pointer-events-none absolute -right-16 -top-14 z-10 h-52 w-52 select-none sm:-right-12 sm:-top-12 sm:h-72 sm:w-72 lg:h-80 lg:w-80"
       >
-        <img src="/assets/stickers/disco-ball-clean.png" alt="" className="absolute right-0 top-0 h-36 w-36 drop-shadow-[0_18px_30px_rgba(4,8,18,0.8)] sm:h-52 sm:w-52" />
-        <img src="/assets/stickers/bow-navy-satin.png" alt="" className="absolute right-4 top-4 h-24 w-auto rotate-12 drop-shadow-2xl sm:right-8 sm:h-36" />
-        <img src="/assets/stickers/bow-chrome-large.png" alt="" className="absolute right-8 top-6 h-14 w-auto -rotate-6 drop-shadow-xl sm:right-12 sm:top-10 sm:h-22" />
-        <img src="/assets/stickers/butterfly-blue.png" alt="" className="absolute right-20 top-24 h-12 w-auto -rotate-12 drop-shadow-xl sm:right-36 sm:top-32 sm:h-18" />
-        <img src="/assets/stickers/star-glitter-blue.png" alt="" className="absolute right-6 top-32 h-12 w-12 rotate-12 opacity-95 sm:right-10 sm:top-44 sm:h-16 sm:w-16" />
-        <img src="/assets/stickers/sparkle-chrome-right.png" alt="" className="hidden sm:block sm:absolute sm:right-40 sm:top-4 sm:h-20 sm:w-auto sm:opacity-95" />
-        <img src="/assets/stickers/lips-blue-glossy.png" alt="" className="hidden lg:block lg:absolute lg:right-36 lg:top-20 lg:h-20 lg:w-auto lg:-rotate-12" />
+        <img src="/assets/stickers/disco-ball-clean.webp" alt="" decoding="async" className="absolute right-0 top-0 h-36 w-36 md:drop-shadow-[0_18px_30px_rgba(4,8,18,0.8)] sm:h-52 sm:w-52" />
+        <img src="/assets/stickers/bow-navy-satin.webp" alt="" decoding="async" className="absolute right-4 top-4 h-24 w-auto rotate-12 md:drop-shadow-2xl sm:right-8 sm:h-36" />
+        <img src="/assets/stickers/bow-chrome-large.webp" alt="" decoding="async" className="absolute right-8 top-6 h-14 w-auto -rotate-6 md:drop-shadow-xl sm:right-12 sm:top-10 sm:h-22" />
+        <img src="/assets/stickers/butterfly-blue.webp" alt="" decoding="async" className="absolute right-20 top-24 h-12 w-auto -rotate-12 md:drop-shadow-xl sm:right-36 sm:top-32 sm:h-18" />
+        <img src="/assets/stickers/star-glitter-blue.webp" alt="" decoding="async" className="absolute right-6 top-32 h-12 w-12 rotate-12 opacity-95 sm:right-10 sm:top-44 sm:h-16 sm:w-16" />
+        <img src="/assets/stickers/sparkle-chrome-right.webp" alt="" decoding="async" className="hidden sm:block sm:absolute sm:right-40 sm:top-4 sm:h-20 sm:w-auto sm:opacity-95" />
+        <img src="/assets/stickers/lips-blue-glossy.webp" alt="" decoding="async" className="hidden lg:block lg:absolute lg:right-36 lg:top-20 lg:h-20 lg:w-auto lg:-rotate-12" />
       </div>
 
-      {/* BOTTOM-LEFT OVERLOADED COLLAGE (left-anchored cowboy hat) */}
+      {/* BOTTOM-LEFT OVERLOADED COLLAGE */}
       <div
         data-speed="28"
         className="hero-corner hero-parallax pointer-events-none absolute bottom-6 -left-16 z-10 h-52 w-56 select-none sm:bottom-10 sm:-left-12 sm:h-72 sm:w-80"
       >
-        <img src="/assets/stickers/glitter-wave-blue.png" alt="" className="absolute bottom-6 left-0 h-20 w-44 opacity-90 sm:bottom-8 sm:h-32 sm:w-64" />
-        <img src="/assets/stickers/vinyl-disc-black.png" alt="" className="hidden sm:block sm:absolute sm:bottom-24 sm:left-24 sm:h-28 sm:w-28 sm:opacity-85" />
-        <img src="/assets/stickers/cowboy-hat-silver.png" alt="" className="absolute bottom-14 left-2 h-22 w-auto -rotate-12 drop-shadow-2xl sm:bottom-24 sm:h-36" />
-        <img src="/assets/stickers/pool-ball-2.png" alt="" className="absolute bottom-24 left-18 h-10 w-10 -rotate-12 drop-shadow-xl sm:bottom-36 sm:left-28 sm:h-16 sm:w-16" />
-        <img src="/assets/stickers/denim-smiley-patch.png" alt="" className="absolute bottom-8 left-16 h-14 w-14 -rotate-12 drop-shadow-xl sm:bottom-10 sm:left-24 sm:h-22 sm:w-22" />
-        <img src="/assets/stickers/lips-silver-1.png" alt="" className="absolute bottom-2 left-28 h-10 w-auto rotate-12 opacity-90 sm:bottom-4 sm:left-40 sm:h-16" />
-        <img src="/assets/stickers/heart-chrome-small.png" alt="" className="hidden lg:block lg:absolute lg:bottom-28 lg:left-44 lg:h-14 lg:w-auto lg:rotate-12" />
+        <img src="/assets/stickers/glitter-wave-blue.webp" alt="" decoding="async" className="absolute bottom-6 left-0 h-20 w-44 opacity-90 sm:bottom-8 sm:h-32 sm:w-64" />
+        <img src="/assets/stickers/vinyl-disc-black.webp" alt="" decoding="async" className="hidden sm:block sm:absolute sm:bottom-24 sm:left-24 sm:h-28 sm:w-28 sm:opacity-85" />
+        <img src="/assets/stickers/cowboy-hat-silver.webp" alt="" decoding="async" className="absolute bottom-14 left-2 h-22 w-auto -rotate-12 md:drop-shadow-2xl sm:bottom-24 sm:h-36" />
+        <img src="/assets/stickers/pool-ball-2.webp" alt="" decoding="async" className="absolute bottom-24 left-18 h-10 w-10 -rotate-12 md:drop-shadow-xl sm:bottom-36 sm:left-28 sm:h-16 sm:w-16" />
+        <img src="/assets/stickers/denim-smiley-patch.webp" alt="" decoding="async" className="absolute bottom-8 left-16 h-14 w-14 -rotate-12 md:drop-shadow-xl sm:bottom-10 sm:left-24 sm:h-22 sm:w-22" />
+        <img src="/assets/stickers/lips-silver-1.webp" alt="" decoding="async" className="absolute bottom-2 left-28 h-10 w-auto rotate-12 opacity-90 sm:bottom-4 sm:left-40 sm:h-16" />
+        <img src="/assets/stickers/heart-chrome-small.webp" alt="" decoding="async" className="hidden lg:block lg:absolute lg:bottom-28 lg:left-44 lg:h-14 lg:w-auto lg:rotate-12" />
       </div>
 
-      {/* BOTTOM-RIGHT OVERLOADED COLLAGE (right-anchored disco girl) */}
+      {/* BOTTOM-RIGHT OVERLOADED COLLAGE */}
       <div
         data-speed="36"
         className="hero-corner hero-parallax pointer-events-none absolute bottom-6 -right-14 z-10 h-52 w-52 select-none sm:bottom-10 sm:-right-10 sm:h-72 sm:w-80"
       >
-        <img src="/assets/stickers/disco-girl.png" alt="" className="absolute bottom-4 right-0 h-36 w-auto drop-shadow-[0_18px_32px_rgba(4,8,18,0.88)] sm:bottom-6 sm:h-56" />
-        <img src="/assets/stickers/martini-glass.png" alt="" className="hidden sm:block sm:absolute sm:bottom-20 sm:right-32 sm:h-28 sm:w-auto sm:-rotate-12" />
-        <img src="/assets/stickers/balloon-dog-chrome.png" alt="" className="absolute bottom-2 right-24 h-16 w-auto -rotate-12 drop-shadow-xl sm:bottom-6 sm:right-36 sm:h-24" />
-        <img src="/assets/stickers/flower-blue.png" alt="" className="absolute bottom-28 right-4 h-12 w-auto rotate-12 sm:bottom-44 sm:right-8 sm:h-20" />
-        <img src="/assets/stickers/sparkle-chrome-right.png" alt="" className="hidden sm:block sm:absolute sm:bottom-36 sm:right-28 sm:h-18 sm:w-auto sm:opacity-90" />
-        <img src="/assets/stickers/star-chrome-1.png" alt="" className="hidden lg:block lg:absolute lg:bottom-12 lg:right-48 lg:h-16 lg:w-16 lg:rotate-12" />
+        <img src="/assets/stickers/disco-girl.webp" alt="" decoding="async" className="absolute bottom-4 right-0 h-36 w-auto md:drop-shadow-[0_18px_32px_rgba(4,8,18,0.88)] sm:bottom-6 sm:h-56" />
+        <img src="/assets/stickers/martini-glass.webp" alt="" decoding="async" className="hidden sm:block sm:absolute sm:bottom-20 sm:right-32 sm:h-28 sm:w-auto sm:-rotate-12" />
+        <img src="/assets/stickers/balloon-dog-chrome.webp" alt="" decoding="async" className="absolute bottom-2 right-24 h-16 w-auto -rotate-12 md:drop-shadow-xl sm:bottom-6 sm:right-36 sm:h-24" />
+        <img src="/assets/stickers/flower-blue.webp" alt="" decoding="async" className="absolute bottom-28 right-4 h-12 w-auto rotate-12 sm:bottom-44 sm:right-8 sm:h-20" />
+        <img src="/assets/stickers/sparkle-chrome-right.webp" alt="" decoding="async" className="hidden sm:block sm:absolute sm:bottom-36 sm:right-28 sm:h-18 sm:w-auto sm:opacity-90" />
+        <img src="/assets/stickers/star-chrome-1.webp" alt="" decoding="async" className="hidden lg:block lg:absolute lg:bottom-12 lg:right-48 lg:h-16 lg:w-16 lg:rotate-12" />
       </div>
 
       {/* FRAMELESS CENTER FLOATING POSTER TYPOGRAPHY */}
@@ -238,7 +243,7 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
           </p>
         </div>
 
-        {/* Classic denim.jpg Borderless Split Date & Time with Single Hairline */}
+        {/* Split Date & Time with Single Hairline */}
         <div className="hero-stagger editorial-shadow mx-auto mt-7 grid max-w-md grid-cols-[1fr_auto_1fr] items-center gap-4">
           <div className="text-right">
             <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-[#d4b483]">
@@ -263,7 +268,7 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
           </div>
         </div>
 
-        {/* Borderless Live Countdowns */}
+        {/* Live Countdowns & Pill CTA */}
         <div className="hero-stagger editorial-shadow mt-8 space-y-5">
           <div>
             <p className="text-[10px] font-bold uppercase tracking-[0.26em] text-[#9ec5ff]">
@@ -314,7 +319,7 @@ export default function HeroSection({ isMobile, active }: HeroSectionProps) {
         </div>
       </div>
 
-      {/* Seamless Gradient Blur Fade into Story Section */}
+      {/* Seamless Gradient Fade into Story Section */}
       <WaveTransition toColor="#f3f0e8" heightClass="h-32 sm:h-44" className="z-[15]" />
     </section>
   );
