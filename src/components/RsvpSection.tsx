@@ -100,7 +100,7 @@ export default function RsvpSection() {
           style={{ transitionDelay: '60ms' }}
           className="reveal-item mx-auto mt-3 max-w-md text-sm leading-relaxed text-[#dce7f8] sm:text-base"
         >
-          Help us finalize the headcount, food, games, and raffle prizes for Section Diamond&apos;s overnight reunion. Kindly fill out our Google Form on or before:
+          Help us finalize the headcount, food, games, and raffle prizes for Diamond&apos;s overnight reunion. Kindly fill out our Google Form on or before:
         </p>
 
         <p
@@ -157,9 +157,9 @@ export default function RsvpSection() {
         <p className="font-editorial text-lg font-semibold text-white">
           {EVENT_INFO.title}
         </p>
-        <p className="mt-0.5">
-          {EVENT_INFO.schoolFull}, Section Diamond ({EVENT_INFO.adviser})
-        </p>
+        <p className="mt-0.5">{EVENT_INFO.schoolFull}</p>
+        <p className="mt-0.5">2014-2015</p>
+        <p className="mt-0.5 font-medium text-[#dce7f8]">IV - Diamond</p>
         <p className="mt-0.5 text-[11px] text-[#96b2dd]">
           {EVENT_INFO.venueName}, {EVENT_INFO.venueLandmark}
         </p>

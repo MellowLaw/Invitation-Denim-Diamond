@@ -202,7 +202,7 @@ export const PROGRAM_FLOW: ProgramItem[] = [
   {
     id: 'slot-7',
     time: '9:00 PM – 10:00 PM',
-    title: 'Recognition / Video Presentation / Message from Advisers / Closing Message',
+    title: 'Recognition / Video Presentation / Message from Adviser / Closing Message',
     featured: true,
     note: "Honoring our 12-year journey and Ma'am Teresa Suazo's Last Diamond section.",
     sticker: '/assets/stickers/flower-blue.webp',
